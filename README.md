@@ -49,7 +49,7 @@ For this project I have implemented the following classes:
 - AppTest.java can be improved because it does not take the order of the results into account. Therefore, `all sorting` by CNP or number of votes are `redundant`.
 - This happens because the `contains()` method is used.
 - As a solution, I thought the result could be written as a block instead of sequentially, with results one after the other.
-- Also, I would implement a feature to truly identify fraudulent voters, since even clumsy individuals would be categorized as fraudulent if they attempt to vote a second time, with their first vote not being counted. Meanwhile, fraudulent voters are actually at their second vote.
+- Also, I would implement a feature to truly identify fraudulent voters, since even clumsy individuals would be categorised as fraudulent if they attempt to vote a second time, with their first vote not being counted. Meanwhile, fraudulent voters are actually at their second vote.
 
 #### Tips for Running the Project ⚡
 To run this project, you need to have **Gradle** installed on your local machine.  
