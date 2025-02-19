@@ -42,7 +42,7 @@ For this project I have implemented the following classes:
   
 ###### Comments 💬
 - I avoided adding comments in the code to keep it clean.  
-- I ensured that variable, method, and class names are all in a single language (Romanian) and followed standard Java formatting conventions to keep everything well-organized and consistent.  
+- I ensured that variable, method, and class names are all in a single language (Romanian) and followed standard Java formatting conventions to keep everything well-organised and consistent.  
 - I focused on making variable and method names as descriptive as possible, so there would be no need to add comments for clarification.  
 
 ###### Bonus 🎁
@@ -65,4 +65,4 @@ This project includes a `settings.gradle` file, which is used to configure the G
 
 > [!TIP]  
 > #### Gradle Integration with IntelliJ IDEA 📦  
-> The project includes the **Gradle Wrapper** (`gradle/wrapper` directory), allowing IntelliJ IDEA to recognize it as a Gradle project automatically. No additional plugins are required—just open the project and you can access Gradle tasks directly from the sidebar
+> The project includes the **Gradle Wrapper** (`gradle/wrapper` directory), allowing IntelliJ IDEA to recognise it as a Gradle project automatically. No additional plugins are required—just open the project and you can access Gradle tasks directly from the sidebar
