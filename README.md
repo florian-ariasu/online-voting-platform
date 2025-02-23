@@ -56,7 +56,7 @@ For this project I have implemented the following classes:
 - This project uses **Gradle** for dependency management and build automation.  
 
 > [!NOTE]  
-> You do **not** need to install Gradle manually, as the project includes the **Gradle Wrapper** (`gradlew`).  
+> You do not need to install Gradle manually, as the project includes the Gradle Wrapper (`gradlew`).  
 
 - This project includes a `settings.gradle` file, which is used to configure the Gradle build.  
 
