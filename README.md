@@ -65,7 +65,8 @@ This project includes a `settings.gradle` file, which is used to configure the G
 
 > [!TIP]  
 > ##### Gradle Integration with IntelliJ IDEA  
-- The project includes the **Gradle Wrapper** (`gradle/wrapper` directory), allowing IntelliJ IDEA to recognise it as a Gradle project automatically. No additional plugins are required - just open the project and you can access Gradle tasks directly from the sidebar.
+- The project includes the **Gradle Wrapper** (`gradle/wrapper` directory), allowing IntelliJ IDEA to recognise it as a Gradle project automatically.
+- No additional plugins are required - just open the project and you can access Gradle tasks directly from the sidebar.
 
 ### Licence
 This project is licensed under the MIT Licence. See the [LICENCE](./LICENSE) file for further details.
