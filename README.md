@@ -67,7 +67,7 @@ For this project I have implemented the following classes:
  ```  
 
 > [!TIP]  
-> ##### Gradle Integration with IntelliJ IDEA  
+> Gradle Integration with IntelliJ IDEA  
 - The project includes the **Gradle Wrapper** (`gradle/wrapper` directory), allowing IntelliJ IDEA to recognise it as a Gradle project automatically.  
 - No additional plugins are required - just open the project, and you can access Gradle tasks directly from the sidebar.  
 
