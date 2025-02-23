@@ -1,6 +1,6 @@
 ## Online Voting Platform
 
-#### Classes 🏫
+#### Classes
 For this project I have implemented the following classes:
 
 - Alegeri
@@ -13,7 +13,7 @@ For this project I have implemented the following classes:
 - ManagerGeneralAlegeri (this class represents the core of the application)
 - StagiuAlegeri (this is an enum declaring all 3 stages of the election)
 
-#### Feature Description ⚙️
+#### Feature Description
 
 ###### Data structures
 - HashMap<>
@@ -67,5 +67,5 @@ This project includes a `settings.gradle` file, which is used to configure the G
 > ##### Gradle Integration with IntelliJ IDEA  
 > The project includes the **Gradle Wrapper** (`gradle/wrapper` directory), allowing IntelliJ IDEA to recognise it as a Gradle project automatically. No additional plugins are required—just open the project and you can access Gradle tasks directly from the sidebar
 
-#### 📜 Licence
+#### Licence
 This project is licensed under the MIT Licence. See the [LICENCE](./LICENSE) file for further details.
