@@ -262,8 +262,40 @@ public class ManagerGeneralAlegeri {
     }
 
     public void Votare(String id, String numeCircumscriptie, String cnpVotant, String cnpCandidat) {
-        boolean votantInregistratCircumscriptie = false;
+        // Check basic error conditions first
+        boolean existaCircumscriptie = fAux.VerificaExistentaCircumscriptie(fAux.listaCircumscriptii, numeCircumscriptie);
+        if (!existaCircumscriptie) {
+            System.out.println("EROARE: Nu exista o circumscriptie cu numele " + numeCircumscriptie);
+            return;
+        }
 
+        boolean existaVotant = fAux.VerificaExistentaVotant(fAux.listaVotanti, cnpVotant);
+        if (!existaVotant) {
+            System.out.println("EROARE: Nu exista un votant cu CNP-ul " + cnpVotant);
+            return;
+        }
+
+        boolean existaCandidat = fAux.VerificaExistentaCandidat(fAux.listaCandidati, cnpCandidat);
+        if (!existaCandidat) {
+            System.out.println("EROARE: Nu exista un candidat cu CNP-ul " + cnpCandidat);
+            return;
+        }
+
+        boolean existaId = fAux.VerificaExistentaIdAlegeri(fAux.listaAlegeri, id);
+        if (!existaId) {
+            System.out.println("EROARE: Nu exista alegeri cu acest id");
+            return;
+        }
+
+        boolean esteStagiuNeinceput = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.NEINCEPUT);
+        boolean esteStagiuTerminat = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.TERMINAT);
+        if (esteStagiuNeinceput || esteStagiuTerminat) {
+            System.out.println("EROARE: Nu este perioada de votare");
+            return;
+        }
+
+        // Check if voter is registered in the correct circumscription
+        boolean votantInregistratCircumscriptie = false;
         for (Votant votant : fAux.listaVotanti) {
             if (votant.getCnp().equals(cnpVotant)) {
                 if (votant.getNumeCircumscriptie().equals(numeCircumscriptie)) {
@@ -275,80 +307,39 @@ public class ManagerGeneralAlegeri {
 
         if (!votantInregistratCircumscriptie) {
             boolean existaVotantFraudulos = fAux.CautaVotantFraudulosDupaCNP(fAux.listaVotantiFraudulosi, cnpVotant);
-
             if (!existaVotantFraudulos) {
                 int varsta = fAux.CautaVarstaDupaCNP(fAux.listaVotanti, cnpVotant);
                 String nume = fAux.CautaNumeVotantDupaCNP(fAux.listaVotanti, cnpVotant);
                 String neindemanatic = fAux.CautaNeindemanaticDupaCNP(fAux.listaVotanti, cnpVotant);
-
                 Votant votant = new Votant(nume, cnpVotant, varsta, neindemanatic, numeCircumscriptie);
                 fAux.listaVotantiFraudulosi.add(votant);
             }
-
             System.out.println("FRAUDA: Votantul cu CNP-ul " + cnpVotant + " a incercat sa comita o frauda. Votul a fost anulat");
+            return;
         }
 
-        boolean existaCircumscriptie = fAux.VerificaExistentaCircumscriptie(fAux.listaCircumscriptii, numeCircumscriptie);
-
-        if (!existaCircumscriptie) {
-            System.out.println("EROARE: Nu exista o circumscriptie cu numele " + numeCircumscriptie);
-        }
-
-        boolean existaVotant = fAux.VerificaExistentaVotant(fAux.listaVotanti, cnpVotant);
-
-        if (!existaVotant) {
-            System.out.println("EROARE: Nu exista un votant cu CNP-ul " + cnpVotant);
-        }
-
-        boolean existaCandidat = fAux.VerificaExistentaCandidat(fAux.listaCandidati, cnpCandidat);
-
-        if (!existaCandidat) {
-            System.out.println("EROARE: Nu exista un candidat cu CNP-ul " + cnpCandidat);
-        }
-
-        boolean existaId = fAux.VerificaExistentaIdAlegeri(fAux.listaAlegeri, id);
-
-        if (!existaId) {
-            System.out.println("EROARE: Nu exista alegeri cu acest id");
-        }
-
-        boolean esteStagiuNeinceput = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.NEINCEPUT);
-        boolean esteStagiuTerminat = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.TERMINAT);
-
-        if (esteStagiuNeinceput || esteStagiuTerminat) {
-            System.out.println("EROARE: Nu este perioada de votare");
-        }
-
+        // Check if voter has already voted (fraud check)
         for (Votant votant : fAux.listaVotanti) {
             if (votant.getCnp().equals(cnpVotant)) {
                 if (votant.getAVotatDeja()) {
                     boolean existaVotantFraudulos = fAux.CautaVotantFraudulosDupaCNP(fAux.listaVotantiFraudulosi, cnpVotant);
-
                     if (!existaVotantFraudulos) {
                         fAux.listaVotantiFraudulosi.add(votant);
                     }
-
                     System.out.println("FRAUDA: Votantul cu CNP-ul " + cnpVotant + " a incercat sa comita o frauda. Votul a fost anulat");
+                    return;
                 }
             }
         }
 
+        // Process the vote
         String numeCandidat = fAux.CautaNumeCandidatDupaCNP(fAux.listaCandidati, cnpCandidat);
-
         for (Votant votant : fAux.listaVotanti) {
             if (votant.getCnp().equals(cnpVotant)) {
                 if (votant.getNeindemanatic().equals("DA")) {
-                    if (numeCandidat == null) {
-                        return;
-                    }
-
                     votant.setAVotatDeja(true);
-                    System.out.println(votant.getNume() + "a votat pentru " + numeCandidat);
+                    System.out.println(votant.getNume() + " a votat pentru " + numeCandidat);
                 } else {
-                    if (numeCandidat == null) {
-                        return;
-                    }
-
                     votant.setAVotatDeja(true);
                     System.out.println(votant.getNume() + " a votat pentru " + numeCandidat);
                     Vot vot = new Vot(id, numeCircumscriptie, cnpVotant, cnpCandidat);
@@ -382,103 +373,136 @@ public class ManagerGeneralAlegeri {
 
     public void RaportVoturiPerCircumscriptie(String id, String numeCircumscriptie) {
         int numarVoturi = 0;
-
         for (Vot vot : fAux.listaVoturi) {
             if (vot.getIdAlegeri().equals(id) && vot.getNumeCircumscriptie().equals(numeCircumscriptie)) {
                 numarVoturi++;
             }
         }
-
         if (numarVoturi == 0) {
             System.out.println("GOL: Lumea nu isi exercita dreptul de vot in " + numeCircumscriptie);
         }
 
         boolean existaId = fAux.VerificaExistentaIdAlegeri(fAux.listaAlegeri, id);
-
         if (!existaId) {
             System.out.println("EROARE: Nu exista alegeri cu acest id");
         }
 
         boolean existaCircumscriptie = fAux.VerificaExistentaCircumscriptie(fAux.listaCircumscriptii, numeCircumscriptie);
-
         if (!existaCircumscriptie) {
             System.out.println("EROARE: Nu exista o circumscriptie cu numele " + numeCircumscriptie);
         }
 
         boolean stagiuNeinceput = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.NEINCEPUT);
         boolean stagiuInCurs = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.IN_CURS);
-
         if (stagiuNeinceput || stagiuInCurs) {
             System.out.println("EROARE: Inca nu s-a terminat votarea");
         }
 
-        for (Vot vot : fAux.listaVoturi) {
-            if (vot.getIdAlegeri().equals(id) && vot.getNumeCircumscriptie().equals(numeCircumscriptie)) {
-                fAux.listaVoturiPerCircumscriptie.add(vot);
+        // Agregam numarul de voturi per candidat doar pentru circumscriptia data
+        List<Candidat> candidatiRaport = new ArrayList<>();
+        for (Candidat c : fAux.listaCandidati) {
+            if (c.getIdAlegeri().equals(id)) {
+                Candidat copie = new Candidat(c.getNume(), c.getCnp(), c.getVarsta(), c.getIdAlegeri());
+                candidatiRaport.add(copie);
             }
         }
-
-        for (Vot vot : fAux.listaVoturiPerCircumscriptie) {
-            for (Candidat candidat : fAux.listaCandidati) {
-                if (vot.getCnpCandidat().equals(candidat.getCnp())) {
-                    candidat.setNumarVoturi(candidat.getNumarVoturi() + 1);
+        for (Vot vot : fAux.listaVoturi) {
+            if (vot.getIdAlegeri().equals(id) && vot.getNumeCircumscriptie().equals(numeCircumscriptie)) {
+                for (Candidat c : candidatiRaport) {
+                    if (c.getCnp().equals(vot.getCnpCandidat())) {
+                        c.setNumarVoturi(c.getNumarVoturi() + 1);
+                        break;
+                    }
                 }
             }
         }
 
-        fAux.SortareDescDupaNrVoturi(fAux.listaCandidatiPerCircumscriptie);
+        // sortare: descrescator dupa numarul de voturi, apoi descrescator dupa CNP
+        for (int i = 0; i < candidatiRaport.size() - 1; i++) {
+            for (int j = i + 1; j < candidatiRaport.size(); j++) {
+                if (candidatiRaport.get(i).getNumarVoturi() < candidatiRaport.get(j).getNumarVoturi()) {
+                    Candidat aux = candidatiRaport.get(i);
+                    candidatiRaport.set(i, candidatiRaport.get(j));
+                    candidatiRaport.set(j, aux);
+                } else if (candidatiRaport.get(i).getNumarVoturi() == candidatiRaport.get(j).getNumarVoturi()) {
+                    if (candidatiRaport.get(i).getCnp().compareTo(candidatiRaport.get(j).getCnp()) < 0) {
+                        Candidat aux = candidatiRaport.get(i);
+                        candidatiRaport.set(i, candidatiRaport.get(j));
+                        candidatiRaport.set(j, aux);
+                    }
+                }
+            }
+        }
 
         System.out.println("Raport voturi " + numeCircumscriptie + ":");
-        for (Candidat candidat : fAux.listaCandidatiPerCircumscriptie) {
-            System.out.println(candidat.getNume() + " " + candidat.getCnp() + " - " + candidat.getNumarVoturi());
+        for (Candidat c : candidatiRaport) {
+            if (c.getNumarVoturi() > 0) {
+                System.out.println(c.getNume() + " " + c.getCnp() + " - " + c.getNumarVoturi());
+            }
         }
     }
 
     public void RaportVoturiNational(String id) {
         int numarVoturi = 0;
-
         for (Vot vot : fAux.listaVoturi) {
             if (vot.getIdAlegeri().equals(id)) {
                 numarVoturi++;
             }
         }
-
         if (numarVoturi == 0) {
             System.out.println("GOL: Lumea nu isi exercita dreptul de vot in Romania");
         }
 
         boolean existaId = fAux.VerificaExistentaIdAlegeri(fAux.listaAlegeri, id);
-
         if (!existaId) {
             System.out.println("EROARE: Nu exista alegeri cu acest id");
         }
 
         boolean stagiuNeinceput = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.NEINCEPUT);
         boolean stagiuInCurs = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.IN_CURS);
-
         if (stagiuNeinceput || stagiuInCurs) {
             System.out.println("EROARE: Inca nu s-a terminat votarea");
         }
 
-        for (Vot vot : fAux.listaVoturi) {
-            if (vot.getIdAlegeri().equals(id)) {
-                fAux.listaVoturiNational.add(vot);
+        List<Candidat> candidatiRaport = new ArrayList<>();
+        for (Candidat c : fAux.listaCandidati) {
+            if (c.getIdAlegeri().equals(id)) {
+                Candidat copie = new Candidat(c.getNume(), c.getCnp(), c.getVarsta(), c.getIdAlegeri());
+                candidatiRaport.add(copie);
             }
         }
-
-        for (Vot vot : fAux.listaVoturiNational) {
-            for (Candidat candidat : fAux.listaCandidati) {
-                if (vot.getCnpCandidat().equals(candidat.getCnp())) {
-                    candidat.setNumarVoturi(candidat.getNumarVoturi() + 1);
+        for (Vot vot : fAux.listaVoturi) {
+            if (vot.getIdAlegeri().equals(id)) {
+                for (Candidat c : candidatiRaport) {
+                    if (c.getCnp().equals(vot.getCnpCandidat())) {
+                        c.setNumarVoturi(c.getNumarVoturi() + 1);
+                        break;
+                    }
                 }
             }
         }
 
-        fAux.SortareDescDupaNrVoturi(fAux.listaCandidati);
+        for (int i = 0; i < candidatiRaport.size() - 1; i++) {
+            for (int j = i + 1; j < candidatiRaport.size(); j++) {
+                if (candidatiRaport.get(i).getNumarVoturi() < candidatiRaport.get(j).getNumarVoturi()) {
+                    Candidat aux = candidatiRaport.get(i);
+                    candidatiRaport.set(i, candidatiRaport.get(j));
+                    candidatiRaport.set(j, aux);
+                } else if (candidatiRaport.get(i).getNumarVoturi() == candidatiRaport.get(j).getNumarVoturi()) {
+                    if (candidatiRaport.get(i).getCnp().compareTo(candidatiRaport.get(j).getCnp()) < 0) {
+                        Candidat aux = candidatiRaport.get(i);
+                        candidatiRaport.set(i, candidatiRaport.get(j));
+                        candidatiRaport.set(j, aux);
+                    }
+                }
+            }
+        }
 
         System.out.println("Raport voturi Romania:");
-        for (Candidat candidat : fAux.listaCandidati) {
-            System.out.println(candidat.getNume() + " " + candidat.getCnp() + " - " + candidat.getNumarVoturi());
+        for (Candidat c : candidatiRaport) {
+            if (c.getNumarVoturi() > 0) {
+                System.out.println(c.getNume() + " " + c.getCnp() + " - " + c.getNumarVoturi());
+            }
         }
     }
 
@@ -510,36 +534,62 @@ public class ManagerGeneralAlegeri {
     }
 
     public void AnalizaDetaliataPerCircumscriptie(String id, String numeCircumscriptie) {
-        int numarVoturi = 0;
-
+        int totalNational = 0;
+        int totalCirc = 0;
         for (Vot vot : fAux.listaVoturi) {
-            if (vot.getIdAlegeri().equals(id) && vot.getNumeCircumscriptie().equals(numeCircumscriptie)) {
-                numarVoturi++;
+            if (vot.getIdAlegeri().equals(id)) {
+                totalNational++;
+                if (vot.getNumeCircumscriptie().equals(numeCircumscriptie)) {
+                    totalCirc++;
+                }
             }
         }
-
-        if (numarVoturi == 0) {
+        if (totalCirc == 0) {
             System.out.println("GOL: Lumea nu isi exercita dreptul de vot in " + numeCircumscriptie);
         }
 
         boolean existaCircumscriptie = fAux.VerificaExistentaCircumscriptie(fAux.listaCircumscriptii, numeCircumscriptie);
-
         if (!existaCircumscriptie) {
             System.out.println("EROARE: Nu exista o circumscriptie cu numele " + numeCircumscriptie);
         }
 
         boolean stagiuNeinceput = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.NEINCEPUT);
         boolean stagiuInCurs = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.IN_CURS);
-
         if (stagiuNeinceput || stagiuInCurs) {
             System.out.println("EROARE: Inca nu s-a terminat votarea");
         }
 
         boolean existaId = fAux.VerificaExistentaIdAlegeri(fAux.listaAlegeri, id);
-
         if (!existaId) {
             System.out.println("EROARE: Nu exista alegeri cu acest id");
         }
+
+        // determinam castigatorul in circumscriptie
+        String topCnp = null;
+        String topNume = null;
+        int topVotes = -1;
+        // count per candidat in circumscriptie
+        for (Candidat c : fAux.listaCandidati) {
+            int cnt = 0;
+            for (Vot vot : fAux.listaVoturi) {
+                if (vot.getIdAlegeri().equals(id) && vot.getNumeCircumscriptie().equals(numeCircumscriptie) && vot.getCnpCandidat().equals(c.getCnp())) {
+                    cnt++;
+                }
+            }
+            if (cnt > topVotes || (cnt == topVotes && topCnp != null && c.getCnp().compareTo(topCnp) > 0)) {
+                topVotes = cnt;
+                topCnp = c.getCnp();
+                topNume = c.getNume();
+            }
+        }
+
+        if (topVotes < 0) {
+            return;
+        }
+
+        int pctCircDinNational = (totalNational == 0) ? 0 : (totalCirc * 100) / totalNational;
+        int pctCastigatorDinCirc = (totalCirc == 0) ? 0 : (topVotes * 100) / totalCirc;
+        System.out.println("In " + numeCircumscriptie + " au fost " + totalCirc + " voturi din " + totalNational + ". Adica " + pctCircDinNational + "%. Cele mai multe voturi au fost stranse de " + topCnp + " " + topNume + ". Acestea constituie " + pctCastigatorDinCirc + "% din voturile circumscriptiei.");
     }
 
     public void AnalizaDetaliataNational(String id) {
@@ -549,15 +599,84 @@ public class ManagerGeneralAlegeri {
 
         boolean stagiuNeinceput = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.NEINCEPUT);
         boolean stagiuInCurs = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.IN_CURS);
-
         if (stagiuNeinceput || stagiuInCurs) {
             System.out.println("EROARE: Inca nu s-a terminat votarea");
         }
 
         boolean existaId = fAux.VerificaExistentaIdAlegeri(fAux.listaAlegeri, id);
-
         if (!existaId) {
             System.out.println("EROARE: Nu exista alegeri cu acest id");
+        }
+
+        // total national
+        int totalNational = 0;
+        for (Vot vot : fAux.listaVoturi) {
+            if (vot.getIdAlegeri().equals(id)) {
+                totalNational++;
+            }
+        }
+        System.out.println("In Romania au fost " + totalNational + " voturi.");
+
+        // agregare pe regiuni: suma voturi pe circumscriptiile din regiune si castigatorul din regiune
+        // colectam regiuni
+        List<String> regiuni = new ArrayList<>();
+        for (Circumscriptie c : fAux.listaCircumscriptii) {
+            if (!regiuni.contains(c.getRegiune())) {
+                regiuni.add(c.getRegiune());
+            }
+        }
+        // ordonare alfabetica a regiunilor
+        for (int i = 0; i < regiuni.size() - 1; i++) {
+            for (int j = i + 1; j < regiuni.size(); j++) {
+                if (regiuni.get(i).compareTo(regiuni.get(j)) > 0) {
+                    String aux = regiuni.get(i);
+                    regiuni.set(i, regiuni.get(j));
+                    regiuni.set(j, aux);
+                }
+            }
+        }
+
+        for (String regiune : regiuni) {
+            // total voturi regiune = suma voturi in toate circumscriptiile din regiune
+            int totalRegiune = 0;
+            // count per candidat in regiune
+            List<Candidat> candidatiReg = new ArrayList<>();
+            for (Candidat c : fAux.listaCandidati) {
+                if (c.getIdAlegeri().equals(id)) {
+                    candidatiReg.add(new Candidat(c.getNume(), c.getCnp(), c.getVarsta(), c.getIdAlegeri()));
+                }
+            }
+            for (Vot vot : fAux.listaVoturi) {
+                if (vot.getIdAlegeri().equals(id)) {
+                    String reg = fAux.RegiunePentruCircumscriptie(vot.getNumeCircumscriptie());
+                    if (reg != null && reg.equals(regiune)) {
+                        totalRegiune++;
+                        for (Candidat c : candidatiReg) {
+                            if (c.getCnp().equals(vot.getCnpCandidat())) {
+                                c.setNumarVoturi(c.getNumarVoturi() + 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // castigator regiune
+            String topCnp = null;
+            String topNume = null;
+            int topVotes = -1;
+            for (Candidat c : candidatiReg) {
+                int cnt = c.getNumarVoturi();
+                if (cnt > topVotes || (cnt == topVotes && topCnp != null && c.getCnp().compareTo(topCnp) > 0)) {
+                    topVotes = cnt;
+                    topCnp = c.getCnp();
+                    topNume = c.getNume();
+                }
+            }
+
+            int pctRegDinNational = (totalNational == 0) ? 0 : (totalRegiune * 100) / totalNational;
+            int pctCastigatorDinReg = (totalRegiune == 0) ? 0 : (topVotes * 100) / totalRegiune;
+            System.out.println("In " + regiune + " au fost " + totalRegiune + " voturi din " + totalNational + ". Adica " + pctRegDinNational + "%. Cele mai multe voturi au fost stranse de " + topCnp + " " + topNume + ". Acestea constituie " + pctCastigatorDinReg + "% din voturile regiunii.");
         }
     }
 
@@ -568,19 +687,18 @@ public class ManagerGeneralAlegeri {
 
         boolean stagiuNeinceput = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.NEINCEPUT);
         boolean stagiuInCurs = fAux.VerificaStagiuVotare(fAux.listaAlegeri, StagiuAlegeri.IN_CURS);
-
         if (stagiuNeinceput || stagiuInCurs) {
             System.out.println("EROARE: Inca nu s-a terminat votarea");
         }
 
         boolean existaId = fAux.VerificaExistentaIdAlegeri(fAux.listaAlegeri, id);
-
         if (!existaId) {
             System.out.println("EROARE: Nu exista alegeri cu acest id");
         }
 
         System.out.println("Fraude comise:");
-        for (Votant votant : fAux.listaVotantiFraudulosi) {
+        for (int i = fAux.listaVotantiFraudulosi.size() - 1; i >= 0; i--) {
+            Votant votant = fAux.listaVotantiFraudulosi.get(i);
             System.out.println("In " + votant.getNumeCircumscriptie() + ": " + votant.getCnp() + " " + votant.getNume());
         }
     }
