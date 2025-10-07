@@ -34,151 +34,168 @@ public class App {
         // Pentru citirea datelor de la tastatura se folosește câmpul scanner.
 
         while (scanner.hasNextLine()) {
-            String linie = scanner.nextLine();
-
-            try {
-                int nrComanda = Integer.parseInt(linie);
-
-                if (cheie != null && valoare != null) {
-                    if (listaComenzi.containsKey(cheie)) {
-                        listaComenzi.get(cheie).add(valoare);
-                    } else {
-                        listaComenzi.computeIfAbsent(cheie, k -> new ArrayList<>()).add(valoare);
-                    }
-                }
-
-                cheie = linie;
-            } catch (NumberFormatException e) {
-                valoare = linie;
+            String comanda = scanner.nextLine();
+            if (comanda == null || comanda.isEmpty()) {
+                continue;
             }
-        }
-
-        for (String key : listaComenzi.keySet()) {
-            List <String> values = listaComenzi.get(key);
-
-            for (String value : values) {
-                switch (key) {
-                    case "0":
-                        cuvinte = value.split(" ", 2);
-                        idAlegeri = cuvinte[0];
-                        numeAlegeri = cuvinte[1];
-                        managerAlegeri.CreareAlegeri(idAlegeri, numeAlegeri);
-
-                        break;
-                    case "1":
-                        idAlegeri = value;
-                        managerAlegeri.PornireAlegeri(idAlegeri);
-
-                        break;
-                    case "2":
-                        cuvinte = value.split(" ", 3);
-                        idAlegeri = cuvinte[0];
-                        numeCircumscriptie = cuvinte[1];
-                        regiune = cuvinte[2];
-                        managerAlegeri.AdaugaCircumscriptie(idAlegeri, numeCircumscriptie, regiune);
-
-                        break;
-                    case "3":
-                        cuvinte = value.split(" ", 2);
-                        idAlegeri = cuvinte[0];
-                        numeCircumscriptie = cuvinte[1];
-                        managerAlegeri.EliminaCircumscriptie(idAlegeri, numeCircumscriptie);
-
-                        break;
-                    case "4":
-                        cuvinte = value.split(" ", 4);
-                        idAlegeri = cuvinte[0];
-                        cnpCandidat = cuvinte[1];
-                        varstaPersoana = Integer.parseInt(cuvinte[2]);
-                        numePersoana = cuvinte[3];
-                        managerAlegeri.AdaugaCandidat(idAlegeri, cnpCandidat, varstaPersoana, numePersoana);
-
-                        break;
-                    case "5":
-                        cuvinte = value.split(" ", 2);
-                        idAlegeri = cuvinte[0];
-                        cnpCandidat = cuvinte[1];
-                        managerAlegeri.EliminaCandidat(idAlegeri, cnpCandidat);
-
-                        break;
-                    case "6":
-                        cuvinte = value.split(" ", 6);
-                        idAlegeri = cuvinte[0];
-                        numeCircumscriptie = cuvinte[1];
-                        cnpVotant = cuvinte[2];
-                        varstaPersoana = Integer.parseInt(cuvinte[3]);
-                        neindemanatic = cuvinte[4];
-                        numePersoana = cuvinte[5];
-                        managerAlegeri.AdauagaVotant(idAlegeri, numeCircumscriptie, cnpVotant, varstaPersoana, neindemanatic, numePersoana);
-
-                        break;
-                    case "7":
-                        idAlegeri = value;
-                        managerAlegeri.ListareCandidatiAlegeri(idAlegeri);
-
-                        break;
-                    case "8":
-                        cuvinte = value.split(" ", 2);
-                        idAlegeri = cuvinte[0];
-                        numeCircumscriptie = cuvinte[1];
-                        managerAlegeri.ListareVotantiCircumscriptie(idAlegeri, numeCircumscriptie);
-
-                        break;
-                    case "9":
-                        cuvinte = value.split(" ", 4);
-                        idAlegeri = cuvinte[0];
-                        numeCircumscriptie = cuvinte[1];
-                        cnpVotant = cuvinte[2];
-                        cnpCandidat = cuvinte[3];
-                        managerAlegeri.Votare(idAlegeri, numeCircumscriptie, cnpVotant, cnpCandidat);
-
-                        break;
-                    case "10":
-                        idAlegeri = value;
-                        managerAlegeri.OprireAlegeri(idAlegeri);
-
-                        break;
-                    case "11":
-                        cuvinte = value.split(" ", 2);
-                        idAlegeri = cuvinte[0];
-                        numeCircumscriptie = cuvinte[1];
-                        managerAlegeri.RaportVoturiPerCircumscriptie(idAlegeri, numeCircumscriptie);
-
-                        break;
-                    case "12":
-                        idAlegeri = value;
-                        managerAlegeri.RaportVoturiNational(idAlegeri);
-
-                        break;
-                    case "13":
-                        cuvinte = value.split(" ", 2);
-                        idAlegeri = cuvinte[0];
-                        numeCircumscriptie = cuvinte[1];
-                        managerAlegeri.AnalizaDetaliataPerCircumscriptie(idAlegeri, numeCircumscriptie);
-
-                        break;
-                    case "14":
-                        idAlegeri = value;
-                        managerAlegeri.AnalizaDetaliataNational(idAlegeri);
-
-                        break;
-                    case "15":
-                        idAlegeri = value;
-                        managerAlegeri.RaportFraude(idAlegeri);
-
-                        break;
-                    case "16":
-                        idAlegeri = value;
-                        managerAlegeri.StergeAlegeri(idAlegeri);
-
-                        break;
-                    case "17":
-                        managerAlegeri.ListareAlegeri();
-
-                        break;
-                    case "18":
-                        return;
+            switch (comanda) {
+                case "0": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 2);
+                    idAlegeri = cuvinte[0];
+                    numeAlegeri = cuvinte[1];
+                    managerAlegeri.CreareAlegeri(idAlegeri, numeAlegeri);
+                    break;
                 }
+                case "1": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    idAlegeri = value;
+                    managerAlegeri.PornireAlegeri(idAlegeri);
+                    break;
+                }
+                case "2": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 3);
+                    idAlegeri = cuvinte[0];
+                    numeCircumscriptie = cuvinte[1];
+                    regiune = cuvinte[2];
+                    managerAlegeri.AdaugaCircumscriptie(idAlegeri, numeCircumscriptie, regiune);
+                    break;
+                }
+                case "3": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 2);
+                    idAlegeri = cuvinte[0];
+                    numeCircumscriptie = cuvinte[1];
+                    managerAlegeri.EliminaCircumscriptie(idAlegeri, numeCircumscriptie);
+                    break;
+                }
+                case "4": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 4);
+                    idAlegeri = cuvinte[0];
+                    cnpCandidat = cuvinte[1];
+                    varstaPersoana = Integer.parseInt(cuvinte[2]);
+                    numePersoana = cuvinte[3];
+                    managerAlegeri.AdaugaCandidat(idAlegeri, cnpCandidat, varstaPersoana, numePersoana);
+                    break;
+                }
+                case "5": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 2);
+                    idAlegeri = cuvinte[0];
+                    cnpCandidat = cuvinte[1];
+                    managerAlegeri.EliminaCandidat(idAlegeri, cnpCandidat);
+                    break;
+                }
+                case "6": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 6);
+                    idAlegeri = cuvinte[0];
+                    numeCircumscriptie = cuvinte[1];
+                    cnpVotant = cuvinte[2];
+                    varstaPersoana = Integer.parseInt(cuvinte[3]);
+                    neindemanatic = cuvinte[4];
+                    numePersoana = cuvinte[5];
+                    managerAlegeri.AdauagaVotant(idAlegeri, numeCircumscriptie, cnpVotant, varstaPersoana, neindemanatic, numePersoana);
+                    break;
+                }
+                case "7": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    idAlegeri = value;
+                    managerAlegeri.ListareCandidatiAlegeri(idAlegeri);
+                    break;
+                }
+                case "8": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 2);
+                    idAlegeri = cuvinte[0];
+                    numeCircumscriptie = cuvinte[1];
+                    managerAlegeri.ListareVotantiCircumscriptie(idAlegeri, numeCircumscriptie);
+                    break;
+                }
+                case "9": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 4);
+                    idAlegeri = cuvinte[0];
+                    numeCircumscriptie = cuvinte[1];
+                    cnpVotant = cuvinte[2];
+                    cnpCandidat = cuvinte[3];
+                    managerAlegeri.Votare(idAlegeri, numeCircumscriptie, cnpVotant, cnpCandidat);
+                    break;
+                }
+                case "10": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    idAlegeri = value;
+                    managerAlegeri.OprireAlegeri(idAlegeri);
+                    break;
+                }
+                case "11": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 2);
+                    idAlegeri = cuvinte[0];
+                    numeCircumscriptie = cuvinte[1];
+                    managerAlegeri.RaportVoturiPerCircumscriptie(idAlegeri, numeCircumscriptie);
+                    break;
+                }
+                case "12": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    idAlegeri = value;
+                    managerAlegeri.RaportVoturiNational(idAlegeri);
+                    break;
+                }
+                case "13": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    cuvinte = value.split(" ", 2);
+                    idAlegeri = cuvinte[0];
+                    numeCircumscriptie = cuvinte[1];
+                    managerAlegeri.AnalizaDetaliataPerCircumscriptie(idAlegeri, numeCircumscriptie);
+                    break;
+                }
+                case "14": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    idAlegeri = value;
+                    managerAlegeri.AnalizaDetaliataNational(idAlegeri);
+                    break;
+                }
+                case "15": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    idAlegeri = value;
+                    managerAlegeri.RaportFraude(idAlegeri);
+                    break;
+                }
+                case "16": {
+                    if (!scanner.hasNextLine()) return;
+                    String value = scanner.nextLine();
+                    idAlegeri = value;
+                    managerAlegeri.StergeAlegeri(idAlegeri);
+                    break;
+                }
+                case "17": {
+                    managerAlegeri.ListareAlegeri();
+                    break;
+                }
+                case "18":
+                    return;
+                default:
+                    // ignore invalid lines
+                    break;
             }
         }
     }

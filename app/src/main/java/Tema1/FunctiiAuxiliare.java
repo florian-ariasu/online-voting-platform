@@ -142,4 +142,13 @@ public class FunctiiAuxiliare {
 
         return false;
     }
+
+    public String RegiunePentruCircumscriptie(String numeCircumscriptie) {
+        for (Circumscriptie circumscriptie : listaCircumscriptii) {
+            if (circumscriptie.getNume().equals(numeCircumscriptie)) {
+                return circumscriptie.getRegiune();
+            }
+        }
+        return null;
+    }
 }
