@@ -74,7 +74,7 @@ For this project I have implemented the following classes:
 
 ### Test fixes — 8 October 2025
 
-I fixed five previously failing unit tests in this project. The issues were addressed in the implementation so that the unit test suite now completes successfully. This section documents the change at a high level and how to verify it.
+I fixed five previously failing unit tests in this project. The issues were addressed in the implementation so that the unit test suite now completes successfully. This section documents the change at a high level.
 
 What changed
 - Fixed five failing unit tests that previously surfaced during automated runs.
