@@ -2,9 +2,9 @@
 
 > [!IMPORTANT]
 > This is the first project homework for OOP class (2nd year, 1st sem)
-- It was done by me with AI guidance throughout the process, except for 5 failed tests
+- It was done by me with **AI guidance throughout the process**, except for **5 failed tests**
 - My implementation covered all tests, except for 5 of them
-- Those 5 tests were covered with the help of **Cursor**, after submitting the partial implementation for the college deadline
+- Those **5 tests** were covered with the help of **Cursor**, after submitting the partial implementation for the college deadline
 - **Educational purposes only**
 
 ### Classes
