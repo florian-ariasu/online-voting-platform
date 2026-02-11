@@ -1,92 +1,139 @@
-## Online Voting Platform
+# Online Voting Platform
 
 > [!IMPORTANT]
-> This is the first project homework for OOP class (2nd year, 1st sem)
-- It was done with **AI guidance throughout the process**, except for **5 failed tests**
-- My implementation covered all tests, except for 5 of them
-- Those **5 tests** were covered with the help of **Cursor**, after submitting the partial implementation for the college deadline
-- **Educational purposes only**
+> This is the first project assignment for the Object-Oriented Programming (OOP) course (2nd year, 1st semester).
+- This implementation was developed and **submitted for academic credit** during the active course period.
+- The initial implementation was **completed independently** without AI assistance.
+- **5 failing tests** were fixed with **AI assistance (Cursor)** after the submission deadline for learning purposes.
+- Final version successfully passes all tests.
 
-### Classes
+## ⚠️ Academic Transparency & AI Disclosure
+
+This repository contains a university assignment that was submitted for academic evaluation.
+
+- **Status:** This code was developed and **submitted during the active grading period** for university credit.
+- **AI Usage:** 
+  - **Initial Submission:** The original implementation that was submitted for grading was developed **entirely without AI assistance**.
+  - **Post-Submission Fixes:** After receiving test results, **5 failing tests** were debugged and fixed using **Cursor AI** for educational purposes.
+  - The AI-assisted fixes were applied **after the academic deadline** and did not affect the graded submission.
+- **Learning Approach:** The project served as hands-on practice with Java OOP principles. Post-deadline AI assistance was used as a learning tool to understand why certain test cases failed.
+- **Academic Integrity:** The submitted version was original work. AI assistance was only used after grading to improve understanding of edge cases and testing requirements.
+
+---
+
+## Classes
+
 For this project I have implemented the following classes:
 
-- Alegeri
-- Circumscriptie
-- Persoana (abstract class)
-- Candidat (extends persoana)
-- Votant (extends persoana)
-- Vot
-- FunctiiAuxiliare (aux methods)
-- ManagerGeneralAlegeri (this class represents the core of the application)
-- StagiuAlegeri (this is an enum declaring all 3 stages of the election)
+- **Alegeri:** Main election class containing election data and configuration.
+- **Circumscriptie:** Represents electoral districts.
+- **Persoana (abstract):** Base class for all persons in the system.
+- **Candidat:** Extends `Persoana` to represent candidates.
+- **Votant:** Extends `Persoana` to represent voters.
+- **Vot:** Represents a cast vote.
+- **FunctiiAuxiliare:** Utility methods for common operations.
+- **ManagerGeneralAlegeri:** Core application manager class handling election logic.
+- **StagiuAlegeri (enum):** Declares all 3 stages of the election process.
 
-### Feature Description
+---
 
-###### Data structures
-- HashMap<>
-- ArrayList<>
+## Features
 
-###### Classes
-- I used a `manager` class because I would have created an instance of an `Alegeri` object redundantly whenever an error from the assignment statement occurred.
-- Here, I have all the necessary methods to implement the functionality of the assignment.
-- In the `Alegeri` class, I defined the necessary variables, constructor, and getters and setters.
-- All the other classes follow the same pattern as `Alegeri`.
-- I defined the `Enum` to avoid passing the stage type as a `String` argument when calling functions. It's not strictly necessary, but that's how I decided to implement it.
-- `Persoana` is an abstract class because I do not explicitly create instances of `Persoana`, but only instances of `Votanti` or `Candidati`.
-- `Votant` and `Candidat` extend `Persoana`
+### Data Structures
 
-###### Reading Data
-- I handled the "reading" using a HashMap<>, but it allows duplicate values because the commands may repeat for error testing.  
-- I read line by line and populate the HashMap, and then I simply iterate through it and extract the values, which are the commands from AppTest.java.
+- **HashMap\<\>:** Used for efficient command parsing and data retrieval.
+- **ArrayList\<\>:** Used for maintaining ordered collections of voters, candidates, and votes.
 
-###### Method Calling
-- I have used a switch statement and formatted the code as effectively as possible based on which method I want to call. This makes the code more readable. When the exit command (namely 18) is encountered, it directly exits the Run() method
+### Classes and Design Patterns
 
-###### OOP Principles
-- `Encapsulation`
-- `Abstraction`
-- `Inheritance`
-  
-###### Comments
-- I avoided adding comments in the code to keep it clean.  
-- I ensured that variable, method, and class names are all in a single language (Romanian) and followed standard Java formatting conventions to keep everything well-organised and consistent.  
-- I focused on making variable and method names as descriptive as possible, so there would be no need to add comments for clarification.  
+- **Manager Pattern:** Used a `ManagerGeneralAlegeri` class to avoid creating redundant `Alegeri` instances when handling errors from the assignment requirements.
+- **Abstraction:** `Persoana` is an **abstract** class because instances are only created as `Votant` or `Candidat`, never as generic `Persoana` objects.
+- **Inheritance:** `Votant` and `Candidat` extend `Persoana` to share common person attributes while adding role-specific functionality.
+- **Enum Usage:** Defined `StagiuAlegeri` enum to avoid passing stage type as `String` arguments, improving type safety.
 
-###### Bonus
-- AppTest.java can be improved because it does not take the order of the results into account. Therefore, `all sorting` by CNP or number of votes are `redundant`.
-- This happens because the `contains()` method is used.
-- As a solution, I thought the result could be written as a block instead of sequentially, with results one after the other.
-- Also, I would implement a feature to truly identify fraudulent voters, since even clumsy individuals would be categorised as fraudulent if they attempt to vote a second time, with their first vote not being counted. Meanwhile, fraudulent voters are actually at their second vote.
+### Reading Data
 
-### Tips for Running the Project  
+- Commands are read line by line and stored in a `HashMap<>`.
+- The HashMap allows duplicate values since commands may repeat for error testing purposes.
+- Data is extracted by iterating through the HashMap and processing command values.
 
-- This project uses **Gradle** for dependency management and build automation.  
+### Method Calling
 
-> [!NOTE]  
-> You do not need to install Gradle manually, as the project includes the Gradle Wrapper (`gradlew`).  
+- Used a `switch` statement for clean, readable command routing.
+- Code is formatted based on which method needs to be called.
+- Exit command (18) directly exits the `Run()` method.
 
-- This project includes a `settings.gradle` file, which is used to configure the Gradle build.  
+### OOP Principles
 
-> [!NOTE]  
-> To download the required dependencies and compile the project, navigate to the project directory in your terminal and run:  
- ```bash
- ./gradlew build  # (Windows users can use gradlew.bat)
- ```  
+- **Encapsulation:** Class fields are private/protected with appropriate getters and setters.
+- **Abstraction:** Implemented via the abstract `Persoana` class.
+- **Inheritance:** Extended base functionality into specialized subclasses (`Votant`, `Candidat`).
 
-> [!TIP]  
-> Gradle Integration with IntelliJ IDEA  
-- The project includes the **Gradle Wrapper** (`gradle/wrapper` directory), allowing IntelliJ IDEA to recognise it as a Gradle project automatically.  
-- No additional plugins are required - just open the project, and you can access Gradle tasks directly from the sidebar.  
+### Code Quality
 
+- **No Comments:** Code is kept clean without inline comments.
+- **Consistent Naming:** All variables, methods, and classes use Romanian naming in a single language.
+- **Descriptive Names:** Variable and method names are self-documenting, eliminating the need for clarifying comments.
+- **Java Conventions:** Followed standard Java formatting conventions for consistency.
 
-### Test fixes — 8 October 2025
+---
 
-I fixed five previously failing unit tests in this project. The issues were addressed in the implementation so that the unit test suite now completes successfully. This section documents the change at a high level.
+## Observations and Potential Improvements
 
-What changed
-- Fixed five failing unit tests that previously surfaced during automated runs.
-- Addressed the root causes in the application logic and edge-case handling so assertions in the tests now match the corrected behavior.
-- No breaking API changes were introduced; the fixes are targeted and intended to restore expected behavior.
+### AppTest.java Limitations
 
-### Licence
-This project is licensed under the MIT Licence. See the [LICENCE](./LICENSE) file for further details.
+- The test suite could be improved as it does not account for result ordering.
+- All sorting by CNP or number of votes is currently **redundant** because the `contains()` method is used.
+- **Proposed Solution:** Results could be written as blocks instead of sequentially to preserve order.
+
+### Fraudulent Voter Detection
+
+- Current implementation may incorrectly categorize clumsy voters (who attempt to vote twice) as fraudulent, even though their first vote isn't counted.
+- **Improvement Needed:** Implement better logic to distinguish between genuine fraudulent voters (at their second vote) and those making mistakes.
+
+---
+
+## Running the Project
+
+This project uses **Gradle** for dependency management and build automation.
+
+> [!NOTE]
+> You do not need to install Gradle manually, as the project includes the Gradle Wrapper (`gradlew`).
+
+The project includes a `settings.gradle` file for build configuration.
+
+### Building the Project
+
+To download dependencies and compile the project:
+
+```bash
+./gradlew build  # Windows users: gradlew.bat build
+```
+
+### Gradle Integration with IntelliJ IDEA
+
+> [!TIP]
+> - The project includes the **Gradle Wrapper** (`gradle/wrapper` directory)
+- IntelliJ IDEA recognizes this as a Gradle project automatically
+- No additional plugins required
+- Access Gradle tasks directly from the IDE sidebar
+
+---
+
+## Test Fixes — 8 October 2024
+
+I fixed five previously failing unit tests in this project after the submission deadline for educational purposes.
+
+### What Changed
+
+- Fixed five failing unit tests that surfaced during automated test runs.
+- Addressed root causes in application logic and edge-case handling.
+- Test assertions now match the corrected behavior.
+- No breaking API changes were introduced.
+- Fixes are targeted and restore expected behavior.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
