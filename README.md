@@ -92,7 +92,7 @@ IntelliJ IDEA will recognize this as a Gradle project automatically via the incl
 
 ## Development Notes
 
-This is a 1st-year OOP course assignment, submitted for academic credit. The initial implementation was completed independently. Post-deadline fixes for 5 failing tests were applied using Cursor AI for learning purposes.
+This is a 1st-year OOP course assignment, submitted for academic credit. The initial implementation was completed independently. Post-deadline fixes for 5 failing tests were applied using Cursor AI for learning purposes after course completion.
 
 ---
 
