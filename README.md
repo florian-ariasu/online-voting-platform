@@ -1,29 +1,24 @@
 # Online Voting Platform
 
-> [!IMPORTANT]
-> This is the first project assignment for the Object-Oriented Programming (OOP) course (2nd year, 1st semester).
-- This implementation was developed and **submitted for academic credit** during the active course period.
-- The initial implementation was **completed independently** without AI assistance.
-- **5 failing tests** were fixed with **AI assistance (Cursor)** after the submission deadline for learning purposes.
-- Final version successfully passes all tests.
+An object-oriented Java project implementing a voting platform with full election lifecycle management — covering electoral districts, candidates, voters, vote casting, and stage-based election control.
 
-## ⚠️ Academic Transparency & AI Disclosure
+---
 
-This repository contains a university assignment that was submitted for academic evaluation.
+## Academic Transparency & AI Disclosure
 
-- **Status:** This code was developed and **submitted during the active grading period** for university credit.
-- **AI Usage:** 
-  - **Initial Submission:** The original implementation that was submitted for grading was developed **entirely without AI assistance**.
-  - **Post-Submission Fixes:** After receiving test results, **5 failing tests** were debugged and fixed using **Cursor AI** for educational purposes.
-  - The AI-assisted fixes were applied **after the academic deadline** and did not affect the graded submission.
-- **Learning Approach:** The project served as hands-on practice with Java OOP principles. Post-deadline AI assistance was used as a learning tool to understand why certain test cases failed.
-- **Academic Integrity:** The submitted version was original work. AI assistance was only used after grading to improve understanding of edge cases and testing requirements.
+This repository contains a university assignment submitted for academic evaluation.
+
+**Status:** Developed and submitted during the active grading period for university credit.
+
+**AI Usage:**
+- **Initial Submission:** The original implementation submitted for grading was developed entirely without AI assistance.
+- **Post-Submission Fixes:** After receiving test results, 5 failing tests were debugged and fixed using Cursor AI for educational purposes, applied after the academic deadline and not affecting the graded submission.
+
+**Academic Integrity:** The submitted version was original work. AI assistance was only used post-deadline to understand edge cases and testing requirements.
 
 ---
 
 ## Classes
-
-For this project I have implemented the following classes:
 
 - **Alegeri:** Main election class containing election data and configuration.
 - **Circumscriptie:** Represents electoral districts.
@@ -44,93 +39,60 @@ For this project I have implemented the following classes:
 - **HashMap\<\>:** Used for efficient command parsing and data retrieval.
 - **ArrayList\<\>:** Used for maintaining ordered collections of voters, candidates, and votes.
 
-### Classes and Design Patterns
+### Design Patterns & OOP
 
-- **Manager Pattern:** Used a `ManagerGeneralAlegeri` class to avoid creating redundant `Alegeri` instances when handling errors from the assignment requirements.
-- **Abstraction:** `Persoana` is an **abstract** class because instances are only created as `Votant` or `Candidat`, never as generic `Persoana` objects.
-- **Inheritance:** `Votant` and `Candidat` extend `Persoana` to share common person attributes while adding role-specific functionality.
-- **Enum Usage:** Defined `StagiuAlegeri` enum to avoid passing stage type as `String` arguments, improving type safety.
-
-### Reading Data
-
-- Commands are read line by line and stored in a `HashMap<>`.
-- The HashMap allows duplicate values since commands may repeat for error testing purposes.
-- Data is extracted by iterating through the HashMap and processing command values.
-
-### Method Calling
-
-- Used a `switch` statement for clean, readable command routing.
-- Code is formatted based on which method needs to be called.
-- Exit command (18) directly exits the `Run()` method.
-
-### OOP Principles
-
+- **Manager Pattern:** `ManagerGeneralAlegeri` avoids creating redundant `Alegeri` instances when handling errors from assignment requirements.
+- **Abstraction:** `Persoana` is abstract — instances are only created as `Votant` or `Candidat`, never as generic objects.
+- **Inheritance:** `Votant` and `Candidat` extend `Persoana` to share common attributes while adding role-specific functionality.
+- **Enum Usage:** `StagiuAlegeri` enum avoids passing stage types as `String` arguments, improving type safety.
 - **Encapsulation:** Class fields are private/protected with appropriate getters and setters.
-- **Abstraction:** Implemented via the abstract `Persoana` class.
-- **Inheritance:** Extended base functionality into specialized subclasses (`Votant`, `Candidat`).
+
+### Command Routing
+
+- Commands are read line by line and stored in a `HashMap<>`, allowing duplicates since commands may repeat for error testing.
+- A `switch` statement handles clean, readable command routing.
+- Exit command (18) directly exits the `Run()` method.
 
 ### Code Quality
 
-- **No Comments:** Code is kept clean without inline comments.
-- **Consistent Naming:** All variables, methods, and classes use Romanian naming in a single language.
-- **Descriptive Names:** Variable and method names are self-documenting, eliminating the need for clarifying comments.
-- **Java Conventions:** Followed standard Java formatting conventions for consistency.
+- No inline comments — variable and method names are self-documenting.
+- Consistent Romanian naming convention throughout.
+- Standard Java formatting conventions applied.
 
 ---
 
-## Observations and Potential Improvements
+## Observations & Potential Improvements
 
-### AppTest.java Limitations
+### Test Suite Limitations
 
-- The test suite could be improved as it does not account for result ordering.
-- All sorting by CNP or number of votes is currently **redundant** because the `contains()` method is used.
-- **Proposed Solution:** Results could be written as blocks instead of sequentially to preserve order.
+- The test suite does not account for result ordering — all sorting by CNP or vote count is currently redundant because `contains()` is used.
+- **Proposed fix:** Write results as blocks rather than sequentially to preserve order.
 
 ### Fraudulent Voter Detection
 
-- Current implementation may incorrectly categorize clumsy voters (who attempt to vote twice) as fraudulent, even though their first vote isn't counted.
-- **Improvement Needed:** Implement better logic to distinguish between genuine fraudulent voters (at their second vote) and those making mistakes.
+- Current logic may incorrectly flag clumsy voters (who attempt to vote twice) as fraudulent, even though their first vote isn't counted.
+- **Improvement needed:** Better distinction between genuine fraud (second vote attempt) and accidental double submission.
 
 ---
 
 ## Running the Project
 
-This project uses **Gradle** for dependency management and build automation.
+This project uses **Gradle** for dependency management and build automation. The Gradle Wrapper is included — no manual installation needed.
 
-> [!NOTE]
-> You do not need to install Gradle manually, as the project includes the Gradle Wrapper (`gradlew`).
-
-The project includes a `settings.gradle` file for build configuration.
-
-### Building the Project
-
-To download dependencies and compile the project:
+### Build
 
 ```bash
-./gradlew build  # Windows users: gradlew.bat build
+./gradlew build        # Linux / macOS
+gradlew.bat build      # Windows
 ```
 
-### Gradle Integration with IntelliJ IDEA
-
-> [!TIP]
-> - The project includes the **Gradle Wrapper** (`gradle/wrapper` directory)
-- IntelliJ IDEA recognizes this as a Gradle project automatically
-- No additional plugins required
-- Access Gradle tasks directly from the IDE sidebar
+IntelliJ IDEA will recognize this as a Gradle project automatically via the included `settings.gradle` file.
 
 ---
 
-## Test Fixes — 8 October 2024
+## Development Notes
 
-I fixed five previously failing unit tests in this project after the submission deadline for educational purposes.
-
-### What Changed
-
-- Fixed five failing unit tests that surfaced during automated test runs.
-- Addressed root causes in application logic and edge-case handling.
-- Test assertions now match the corrected behavior.
-- No breaking API changes were introduced.
-- Fixes are targeted and restore expected behavior.
+This is a 1st-year OOP course assignment, submitted for academic credit. The initial implementation was completed independently. Post-deadline fixes for 5 failing tests were applied using Cursor AI for learning purposes.
 
 ---
 
